@@ -10,25 +10,29 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Theme.of(context).colorScheme.secondary,
-          leading: IconButton(
-              onPressed: () {
-                product.toogleFavouriteStatus();
-              },
-              icon: product.isFavourite
-                  ? Icon(
-                      Icons.favorite,
-                      color: Theme.of(context).colorScheme.error,
-                    )
-                  : Icon(
-                      Icons.favorite_border,
-                      color: Theme.of(context).colorScheme.error,
-                    )),
+          leading: Consumer<Product>(
+            builder: (context, product, child) {
+              return IconButton(
+                  onPressed: () {
+                    product.toogleFavouriteStatus();
+                  },
+                  icon: product.isFavourite
+                      ? Icon(
+                          Icons.favorite,
+                          color: Theme.of(context).colorScheme.error,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                          color: Theme.of(context).colorScheme.error,
+                        ));
+            },
+          ),
           title: Text(
             product.title,
             style: Theme.of(context).textTheme.titleMedium,
