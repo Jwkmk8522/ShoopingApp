@@ -1,0 +1,4 @@
+enum Filterfavourite {
+  favourite,
+  showAll,
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooping_app/Providers/cart.dart';
 import 'package:shooping_app/Providers/product.dart';
 import 'package:shooping_app/Screens/product_detail_screen.dart';
 
@@ -11,6 +12,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: GridTile(
@@ -39,7 +41,13 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              cart.additems(
+                product.id,
+                product.price,
+                product.title,
+              );
+            },
             icon: Icon(
               Icons.shopping_cart,
               color: Theme.of(context).colorScheme.error,
