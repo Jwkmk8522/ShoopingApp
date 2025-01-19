@@ -20,6 +20,45 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
+//use the removeSingleItem in the productoverview screen in undo snackbar
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]!.quantity > 1) {
+      _items.update(productId, (existingCartItem) {
+        return CartItem(
+            id: existingCartItem.id,
+            price: existingCartItem.price,
+            quantity: existingCartItem.quantity - 1,
+            title: existingCartItem.title);
+      });
+    } else {
+      //if quantity is less then 1 then remove the entire prodoct from cartitem
+      _items.remove(productId);
+    }
+    notifyListeners();
+  }
+
+  void removeSingleItemInDecrement(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]!.quantity > 1) {
+      _items.update(productId, (existingCartItem) {
+        return CartItem(
+            id: existingCartItem.id,
+            price: existingCartItem.price,
+            quantity: existingCartItem.quantity - 1,
+            title: existingCartItem.title);
+      });
+    } else {
+      //if quantity is less then 1 then not decrement the number
+      return;
+    }
+    notifyListeners();
+  }
+
 // use to delete the item in cart Item class in dismissible widget
   void removeItem(String productId) {
     _items.remove(productId);

@@ -1,15 +1,15 @@
+// import 'dart:developer' show log;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shooping_app/Enums/filterfavourite.dart';
-import 'package:shooping_app/Providers/cart.dart';
-import 'package:shooping_app/Providers/theme.dart';
-import 'package:shooping_app/Screens/cart_screen.dart';
-import 'package:shooping_app/Widgets/app_drawer.dart';
-import 'package:shooping_app/Widgets/badge.dart';
-
-import 'package:shooping_app/Widgets/productgrid.dart';
-// import 'dart:developer' show log;
+import '../Enums/filterfavourite.dart';
+import '../Providers/cart.dart';
+import '../Providers/theme.dart';
+import '../Screens/cart_screen.dart';
+import '../Widgets/app_drawer.dart';
+import '../Widgets/badge.dart';
+import '../Widgets/productgrid.dart';
 
 class ProductOverviewScreen extends StatefulWidget {
   const ProductOverviewScreen({super.key});
@@ -29,14 +29,15 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(themeProvider.themeMode == ThemeMode.dark
-                ? Icons.dark_mode
-                : Icons.light_mode),
             onPressed: () {
-              // Toggle theme
               themeProvider
-                  .toggleTheme(themeProvider.themeMode == ThemeMode.light);
+                  .toggleTheme(themeProvider.themeMode == ThemeMode.dark);
             },
+            icon: Icon(
+              themeProvider.themeMode == ThemeMode.dark
+                  ? Icons.dark_mode
+                  : Icons.light_mode,
+            ),
           ),
           Consumer<Cart>(
             builder: (context, cart, child) {

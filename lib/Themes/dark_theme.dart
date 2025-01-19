@@ -71,7 +71,7 @@ ThemeData customLightTheme = ThemeData.light(
     primary: Color(0xFF6200EE), // Vibrant Indigo
     secondary: Colors.black54, // Amber
     surface: Colors.white,
-    onPrimary: Colors.white,
+    onPrimary: Colors.black,
     onSecondary: Colors.grey,
     onSurface: Colors.black,
     error: Colors.red,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooping_app/Providers/cart.dart';
+
+import '../Providers/cart.dart';
+import '../Utilities/show_delete_dialog.dart';
 
 class CartItem extends StatelessWidget {
   final double price;
@@ -20,6 +22,8 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<Cart>(context, listen: false);
+
     return Dismissible(
       key: ValueKey(id),
       background: Container(
@@ -35,6 +39,9 @@ class CartItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        return showdeletedialog(context);
+      },
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
@@ -44,14 +51,58 @@ class CartItem extends StatelessWidget {
           leading: CircleAvatar(
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: FittedBox(child: Text("$price")),
+              child: FittedBox(child: Text("${price.toStringAsFixed(2)}")),
             ),
           ),
           title: Text(titlee),
           subtitle: Text("${price * quantity}"),
-          trailing: Text(
-            "$quantity x",
-            style: const TextStyle(fontSize: 14),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  cart.removeSingleItemInDecrement(productId);
+                },
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[300],
+                  ),
+                  child: const Icon(
+                    Icons.remove,
+                    size: 10,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  "$quantity",
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  cart.additems(productId, price, titlee);
+                },
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[300],
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    size: 10,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

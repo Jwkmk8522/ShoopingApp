@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooping_app/Providers/cart.dart';
-import 'package:shooping_app/Providers/orders.dart';
-import 'package:shooping_app/Providers/products.dart';
-import 'package:shooping_app/Providers/theme.dart';
-import 'package:shooping_app/Screens/cart_screen.dart';
-import 'package:shooping_app/Screens/order_screen.dart';
-//...
-import 'package:shooping_app/Screens/product_detail_screen.dart';
-import 'package:shooping_app/Screens/product_overview_screen.dart';
-import 'package:shooping_app/Themes/dark_theme.dart';
+
+import '../Providers/cart.dart';
+import '../Providers/orders.dart';
+import '../Providers/products.dart';
+import '../Providers/theme.dart';
+import '../Screens/cart_screen.dart';
+import '../Screens/order_screen.dart';
+import '../Screens/product_detail_screen.dart';
+import '../Screens/product_overview_screen.dart';
+import '../Screens/user_products_screen.dart';
+import '../Themes/dark_theme.dart';
 
 void main() {
   runApp(
@@ -49,16 +50,17 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
         theme: customLightTheme,
         darkTheme: customDarkTheme,
         themeMode: themeProvider.themeMode,
+        debugShowCheckedModeBanner: false,
         home: const ProductOverviewScreen(),
         routes: {
           ProductDetailScreen.routeName: (context) =>
               const ProductDetailScreen(),
           CartScreen.routeName: (context) => const CartScreen(),
           OrderScreen.routeName: (context) => const OrderScreen(),
+          UserProductsScreen.routeName: (context) => const UserProductsScreen(),
         },
       ),
     );
