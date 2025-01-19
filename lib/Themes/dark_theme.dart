@@ -10,8 +10,8 @@ ThemeData customDarkTheme = ThemeData.dark(
     onPrimary: Colors.white,
     onSecondary: Color(0xFF2C2C38),
     onSurface: Color(0xFFD1D1E0),
-    error: Color(0xFFCF6679),
-    onError: Colors.white,
+    error: Color.fromARGB(255, 9, 47, 239),
+    onError: Color.fromARGB(255, 247, 3, 3),
   ),
   scaffoldBackgroundColor: const Color.fromARGB(
       255, 43, 42, 42), // Set a custom Scaffold background color
@@ -53,10 +53,74 @@ ThemeData customDarkTheme = ThemeData.dark(
         fontWeight: FontWeight.bold,
         fontFamily: 'Lato'),
     titleMedium: TextStyle(
-        color: Color(0xFFD1D1E0),
+        color: Color(0xFFE0E0FF),
         fontSize: 16,
         fontWeight: FontWeight.bold,
         fontFamily: 'Lato'),
-    titleSmall: TextStyle(color: Color(0xFFB0B0C0), fontSize: 14),
+    titleSmall: TextStyle(
+      color: Color(0xFFE0E0FF),
+      fontSize: 14,
+    ),
+  ),
+);
+
+ThemeData customLightTheme = ThemeData.light(
+  useMaterial3: true,
+).copyWith(
+  colorScheme: const ColorScheme.light(
+    primary: Color(0xFF6200EE), // Vibrant Indigo
+    secondary: Colors.black54, // Amber
+    surface: Colors.white,
+    onPrimary: Colors.white,
+    onSecondary: Colors.grey,
+    onSurface: Colors.black,
+    error: Colors.red,
+    onError: Colors.white,
+  ),
+  scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Light gray background
+
+  cardTheme: CardTheme(
+    color: Colors.white, // White for light mode
+    elevation: 4,
+    shadowColor: Colors.grey.withOpacity(0.5),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+  ),
+  appBarTheme: const AppBarTheme(
+    color: Colors.white,
+    titleTextStyle: TextStyle(
+      color: Color(0xFF6200EE),
+      fontFamily: 'Lato',
+      fontWeight: FontWeight.bold,
+      fontSize: 25,
+    ),
+    iconTheme: IconThemeData(color: Color(0xFF6200EE)),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF6200EE),
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    ),
+  ),
+  textTheme: const TextTheme(
+    titleLarge: TextStyle(
+        color: Color(0xFF6200EE),
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Lato'),
+    titleMedium: TextStyle(
+        color: Color(0xFF6200EE),
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Lato'),
+    titleSmall: TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+    ),
   ),
 );

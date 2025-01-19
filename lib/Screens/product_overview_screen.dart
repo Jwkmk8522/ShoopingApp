@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'package:shooping_app/Enums/filterfavourite.dart';
 import 'package:shooping_app/Providers/cart.dart';
+import 'package:shooping_app/Providers/theme.dart';
 import 'package:shooping_app/Screens/cart_screen.dart';
+import 'package:shooping_app/Widgets/app_drawer.dart';
 import 'package:shooping_app/Widgets/badge.dart';
 
 import 'package:shooping_app/Widgets/productgrid.dart';
@@ -20,11 +22,36 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavourite = false;
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<Themee>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Shooping App"),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: Icon(themeProvider.themeMode == ThemeMode.dark
+                ? Icons.dark_mode
+                : Icons.light_mode),
+            onPressed: () {
+              // Toggle theme
+              themeProvider
+                  .toggleTheme(themeProvider.themeMode == ThemeMode.light);
+            },
+          ),
+          Consumer<Cart>(
+            builder: (context, cart, child) {
+              return Badgee(
+                // value: '100'
+                value: cart.productCount.toString(),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(CartScreen.routeName);
+                  },
+                  icon: const Icon(Icons.shopping_cart),
+                ),
+              );
+            },
+          ),
           PopupMenuButton(
             onSelected: (Filterfavourite value) {
               // log("$value");
@@ -52,22 +79,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               ];
             },
           ),
-          Consumer<Cart>(
-            builder: (context, cart, child) {
-              return Badgee(
-                // value: '100'
-                value: cart.productCount.toString(),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(CartScreen.routeName);
-                  },
-                  icon: const Icon(Icons.shopping_cart),
-                ),
-              );
-            },
-          ),
         ],
       ),
+      drawer: const AppDrawer(),
       body: ProductsGrid(
         showFavs: _showOnlyFavourite,
       ),

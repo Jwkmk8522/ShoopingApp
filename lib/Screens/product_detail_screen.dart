@@ -17,20 +17,41 @@ class ProductDetailScreen extends StatelessWidget {
         title: Text(loadedProducts.title),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.network(
-                loadedProducts.imageUrl,
-                fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                  loadedProducts.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Text("Description :  ${loadedProducts.description}"),
-        ],
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  loadedProducts.title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                Text("\$${loadedProducts.price}",
+                    style: Theme.of(context).textTheme.titleMedium),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Text(
+                loadedProducts.description,
+                style: Theme.of(context).textTheme.titleSmall,
+                softWrap: true,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

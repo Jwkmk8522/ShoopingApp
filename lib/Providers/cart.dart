@@ -20,6 +20,12 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
+// use to delete the item in cart Item class in dismissible widget
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
 //use in the cart screen for showing total Amount
   double get totalAmount {
     double total = 0.0;
@@ -76,6 +82,12 @@ class Cart with ChangeNotifier {
       );
     }
 
+    notifyListeners();
+  }
+
+//To clear cart
+  void clear() {
+    _items = {};
     notifyListeners();
   }
 }
