@@ -82,4 +82,20 @@ class Products with ChangeNotifier {
       return prod.id == productId;
     });
   }
+
+  void addProducts(Product products) {
+    _item.add(products);
+    // _item.insert(0, products); To add the prodect at the first mean new product at the top
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product newProduct) {
+    final prodIndex = _item.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _item[prodIndex] = newProduct;
+      notifyListeners();
+    } else {
+      print('.......................................................');
+    }
+  }
 }

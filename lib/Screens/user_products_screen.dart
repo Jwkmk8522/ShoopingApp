@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Screens/edit_products_screen.dart';
 import '../Providers/products.dart';
 import '../Widgets/app_drawer.dart';
 import '../Widgets/user_product_item.dart';
@@ -18,7 +19,13 @@ class UserProductsScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("User Products"),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditProductsScreen.routeName);
+              },
+              icon: const Icon(Icons.add))
+        ],
       ),
       drawer: const AppDrawer(),
       body: ListView.builder(
@@ -27,6 +34,7 @@ class UserProductsScreen extends StatelessWidget {
           return Column(
             children: [
               UserProductItem(
+                id: productData.item[index].id,
                 imageUrl: productData.item[index].imageUrl,
                 titlee: productData.item[index].title,
               ),

@@ -55,7 +55,7 @@ class AppDrawer extends StatelessWidget {
               Icons.edit,
             ),
             trailing: Text(
-              'Manage Orders',
+              'Manage Products',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             onTap: () {

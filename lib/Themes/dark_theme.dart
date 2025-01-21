@@ -75,7 +75,7 @@ ThemeData customLightTheme = ThemeData.light(
     onSecondary: Colors.grey,
     onSurface: Colors.black,
     error: Colors.red,
-    onError: Colors.white,
+    onError: Color.fromARGB(255, 247, 3, 3),
   ),
   scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Light gray background
 
@@ -90,7 +90,7 @@ ThemeData customLightTheme = ThemeData.light(
   appBarTheme: const AppBarTheme(
     color: Colors.white,
     titleTextStyle: TextStyle(
-      color: Color(0xFF6200EE),
+      color: Colors.black,
       fontFamily: 'Lato',
       fontWeight: FontWeight.bold,
       fontSize: 25,
