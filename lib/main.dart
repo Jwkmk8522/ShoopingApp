@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
-import 'Screens/edit_products_screen.dart';
+import '../firebase_options.dart';
+import '../Screens/edit_products_screen.dart';
 import '../Providers/cart.dart';
 import '../Providers/orders.dart';
 import '../Providers/products.dart';
@@ -13,7 +15,11 @@ import '../Screens/product_overview_screen.dart';
 import '../Screens/user_products_screen.dart';
 import '../Themes/dark_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     ChangeNotifierProvider(
       create: (context) {

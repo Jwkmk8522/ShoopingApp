@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooping_app/Providers/products.dart';
+import 'package:shooping_app/Widgets/Loading/new_card_skeleton.dart';
 
 import '../Enums/filterfavourite.dart';
 import '../Providers/cart.dart';
@@ -19,6 +21,22 @@ class ProductOverviewScreen extends StatefulWidget {
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    Provider.of<Products>(context, listen: false).getAndSetProduct().then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    super.initState();
+  }
+
   var _showOnlyFavourite = false;
   @override
   Widget build(BuildContext context) {
@@ -83,9 +101,21 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductsGrid(
-        showFavs: _showOnlyFavourite,
-      ),
+      body: _isLoading
+          ? GridView.builder(
+              padding: const EdgeInsets.all(10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: 4 / 3,
+              ),
+              itemCount: 8,
+              itemBuilder: (context, index) => const NewsCardSkelton(),
+            )
+          : ProductsGrid(
+              showFavs: _showOnlyFavourite,
+            ),
     );
   }
 }
