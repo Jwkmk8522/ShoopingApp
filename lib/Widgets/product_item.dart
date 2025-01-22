@@ -1,40 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../Providers/cart.dart';
-import '../Providers/product.dart';
-import '../Screens/product_detail_screen.dart';
+import 'package:shooping_app/Providers/cart.dart';
+import 'package:shooping_app/Providers/product.dart';
+import 'package:shooping_app/Screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({
-    super.key,
-  });
+  const ProductItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
+    // Access Product without listening to it (no rebuild)
+    final product = Provider.of<Product>(
+      context,
+    );
+    // Access Cart without listening to it (no rebuild)
     final cart = Provider.of<Cart>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Theme.of(context).colorScheme.secondary,
+
+          // Consumer is used only for the part that needs to rebuild
           leading: Consumer<Product>(
-            builder: (context, product, child) {
-              return IconButton(
-                  onPressed: () {
-                    product.toogleFavouriteStatus();
-                  },
-                  icon: product.isFavourite
-                      ? Icon(
-                          Icons.favorite,
-                          color: Theme.of(context).colorScheme.error,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                          color: Theme.of(context).colorScheme.error,
-                        ));
-            },
+            builder: (context, product, child) => IconButton(
+              icon: Icon(
+                product.isFavourite ? Icons.favorite : Icons.favorite_border,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              onPressed: () {
+                product.toogleFavouriteStatus();
+              },
+            ),
           ),
           title: Text(
             product.title,

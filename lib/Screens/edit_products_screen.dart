@@ -24,7 +24,7 @@ class _EditProductsState extends State<EditProductsScreen> {
 
   var _editedProduct = Product(
     imageUrl: '',
-    id: '', // Default to an empty string instead of null
+    id: '',
     title: '',
     description: '',
     price: 0,
@@ -41,7 +41,7 @@ class _EditProductsState extends State<EditProductsScreen> {
     if (_isInit) {
       final productId = ModalRoute.of(context)!.settings.arguments as String?;
 
-      // Handle both cases: Edit or Add
+// If id is not null mean user is to going for edit
       if (productId != null) {
         _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
@@ -65,21 +65,9 @@ class _EditProductsState extends State<EditProductsScreen> {
     }
     _form.currentState!.save();
 
-    // If the product has no ID (i.e., it's a new product)
     if (_editedProduct.id.isEmpty) {
-      // Generate a unique ID for the new product
-      _editedProduct = Product(
-        id: DateTime.now().toString(), // Unique ID based on time
-        title: _editedProduct.title,
-        description: _editedProduct.description,
-        price: _editedProduct.price,
-        imageUrl: _editedProduct.imageUrl,
-      );
-
-      // Add the product to the list
       Provider.of<Products>(context, listen: false).addProducts(_editedProduct);
     } else {
-      // If there's an ID, it's an existing product, so update it
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
     }

@@ -28,7 +28,7 @@ class Products with ChangeNotifier {
       description: "Track your activities and health.",
       price: 199.99,
       imageUrl:
-          "https://images.pexels.com/photos/1682821/pexels-photo-1682821.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/1682821/pexels-photo-1682821.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
       isFavourite: false,
     ),
     Product(
@@ -84,7 +84,15 @@ class Products with ChangeNotifier {
   }
 
   void addProducts(Product products) {
-    _item.add(products);
+    final newproduct = Product(
+      id: DateTime.now().toString(),
+      title: products.title,
+      description: products.description,
+      price: products.price,
+      imageUrl: products.imageUrl,
+    );
+    _item.add(newproduct);
+
     // _item.insert(0, products); To add the prodect at the first mean new product at the top
     notifyListeners();
   }
@@ -95,7 +103,12 @@ class Products with ChangeNotifier {
       _item[prodIndex] = newProduct;
       notifyListeners();
     } else {
-      print('.......................................................');
+      print('.............');
     }
+  }
+
+  void deleteProduct(String id) {
+    _item.removeWhere((prod) => prod.id == id);
+    notifyListeners();
   }
 }
