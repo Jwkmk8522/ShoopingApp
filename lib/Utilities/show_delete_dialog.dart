@@ -3,6 +3,7 @@ import './generic_dialog.dart';
 
 Future<bool> showdeletedialog(
   BuildContext context,
+  String title,
 ) {
   return showGenericDialog<bool>(
     context: context,
@@ -11,7 +12,7 @@ Future<bool> showdeletedialog(
       style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
     ),
     content: Text(
-      'Are you sure you want to Delete this Product From Cart?',
+      title,
       style: TextStyle(
         color: Theme.of(context).colorScheme.onPrimary,
       ),

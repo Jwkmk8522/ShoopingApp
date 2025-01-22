@@ -58,6 +58,15 @@ class _EditProductsState extends State<EditProductsScreen> {
     super.didChangeDependencies();
   }
 
+  void customSnackBar(String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(title),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   void _saveForm() {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
@@ -67,9 +76,11 @@ class _EditProductsState extends State<EditProductsScreen> {
 
     if (_editedProduct.id.isEmpty) {
       Provider.of<Products>(context, listen: false).addProducts(_editedProduct);
+      customSnackBar("Succesfully Added Product in User Product Screen");
     } else {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
+      customSnackBar("Succesfully Update Product");
     }
 
     Navigator.of(context).pop();

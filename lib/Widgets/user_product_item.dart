@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooping_app/Providers/products.dart';
 import 'package:shooping_app/Screens/edit_products_screen.dart';
+import 'package:shooping_app/Utilities/show_delete_dialog.dart';
 
 class UserProductItem extends StatelessWidget {
   final String id;
@@ -36,11 +37,16 @@ class UserProductItem extends StatelessWidget {
                 icon: const Icon(Icons.edit),
               ),
               IconButton(
-                onPressed: () {
-                  Provider.of<Products>(
-                    context,
-                    listen: false,
-                  ).deleteProduct(id);
+                onPressed: () async {
+                  final shouldDelete = await showdeletedialog(
+                      context, "Are you sure you want to Delete this Product?");
+                  if (shouldDelete) {
+                    Provider.of<Products>(
+                      context,
+                      listen: false,
+                    ).deleteProduct(id);
+                  }
+                  return;
                 },
                 icon: Icon(
                   Icons.delete,
