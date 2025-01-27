@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooping_app/Models/http_exceptions.dart';
 import 'package:shooping_app/Providers/products.dart';
+import 'package:shooping_app/Utilities/error_dialog.dart';
 import 'package:shooping_app/Widgets/Loading/new_card_skeleton.dart';
 
 import '../Enums/filterfavourite.dart';
@@ -23,17 +25,31 @@ class ProductOverviewScreen extends StatefulWidget {
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _isLoading = false;
 
-  @override
-  void initState() {
-    setState(() {
-      _isLoading = true;
-    });
-
-    Provider.of<Products>(context, listen: false).getAndSetProduct().then((_) {
+  Future<void> getProducts() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<Products>(context, listen: false).getAndSetProduct();
       setState(() {
         _isLoading = false;
       });
-    });
+    } on NoProductsExceptions catch (error) {
+      showErrorDialog(context, error.message);
+    } on HttpExceptions catch (error) {
+      showErrorDialog(context, error.message);
+    } on NoInternetExceptions catch (error) {
+      showErrorDialog(context, error.message);
+    } on OnUnknownExceptions catch (error) {
+      showErrorDialog(context, error.message);
+    } catch (error) {
+      showErrorDialog(context, "something went wrong");
+    }
+  }
+
+  @override
+  void initState() {
+    getProducts();
     super.initState();
   }
 

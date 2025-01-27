@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooping_app/Providers/products.dart';
-import 'package:shooping_app/Screens/edit_products_screen.dart';
-import 'package:shooping_app/Utilities/show_delete_dialog.dart';
+import 'package:shooping_app/Models/http_exceptions.dart';
+import 'package:shooping_app/Utilities/error_dialog.dart';
+
+import '../Providers/products.dart';
+import '../Screens/edit_products_screen.dart';
+import '../Utilities/show_delete_dialog.dart';
 
 class UserProductItem extends StatelessWidget {
   final String id;
@@ -16,14 +19,15 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMes = ScaffoldMessenger.of(context);
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(10),
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: NetworkImage(imageUrl),
         ),
         title: Text(titlee),
-        trailing: Container(
+        trailing: SizedBox(
           width: 100,
           child: Row(
             children: [
@@ -38,15 +42,22 @@ class UserProductItem extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () async {
-                  final shouldDelete = await showdeletedialog(
-                      context, "Are you sure you want to Delete this Product?");
-                  if (shouldDelete) {
-                    Provider.of<Products>(
-                      context,
-                      listen: false,
-                    ).deleteProduct(id);
+                  try {
+                    final shouldDelete = await showdeletedialog(context,
+                        "Are you sure you want to Delete this Product?");
+                    if (shouldDelete) {
+                      await Provider.of<Products>(
+                        context,
+                        listen: false,
+                      ).deleteProduct(id);
+                    }
+                  } on HttpExceptions catch (error) {
+                    showErrorDialog(context, error.message);
+                  } catch (error) {
+                    scaffoldMes.showSnackBar(const SnackBar(
+                        content:
+                            Text("Product Not Deleted something went wrong")));
                   }
-                  return;
                 },
                 icon: Icon(
                   Icons.delete,
