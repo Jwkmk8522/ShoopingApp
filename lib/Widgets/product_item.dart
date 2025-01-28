@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooping_app/Providers/auth.dart';
 import 'package:shooping_app/Providers/cart.dart';
 import 'package:shooping_app/Providers/product.dart';
 import 'package:shooping_app/Screens/product_detail_screen.dart';
@@ -9,6 +10,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authData = Provider.of<Auth>(context, listen: false);
     // Access Product without listening to it (no rebuild)
     final product = Provider.of<Product>(
       context,
@@ -30,7 +32,7 @@ class ProductItem extends StatelessWidget {
                 color: Theme.of(context).colorScheme.error,
               ),
               onPressed: () {
-                product.toogleFavouriteStatus();
+                product.toogleFavouriteStatus(authData.token);
               },
             ),
           ),

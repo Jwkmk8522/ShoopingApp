@@ -20,6 +20,7 @@ class UserProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scaffoldMes = ScaffoldMessenger.of(context);
+    BuildContext ctx = context;
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListTile(
@@ -46,13 +47,11 @@ class UserProductItem extends StatelessWidget {
                     final shouldDelete = await showdeletedialog(context,
                         "Are you sure you want to Delete this Product?");
                     if (shouldDelete) {
-                      await Provider.of<Products>(
-                        context,
-                        listen: false,
-                      ).deleteProduct(id);
+                      await Provider.of<Products>(context, listen: false)
+                          .deleteProduct(id);
                     }
                   } on HttpExceptions catch (error) {
-                    showErrorDialog(context, error.message);
+                    showErrorDialog(ctx, error.message);
                   } catch (error) {
                     scaffoldMes.showSnackBar(const SnackBar(
                         content:

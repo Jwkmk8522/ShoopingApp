@@ -23,9 +23,11 @@ class Orders with ChangeNotifier {
     return [..._items];
   }
 
+  final String? token;
+  Orders(this.token, this._items);
   Future<void> addOrder(List<CartItem> cartProducts, double amount) async {
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Orders.json");
+        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Orders.json?auth=$token");
     final date = DateTime.now();
     final response = await http.post(
       url,
@@ -55,7 +57,7 @@ class Orders with ChangeNotifier {
 
   Future<void> getAndSetOrders() async {
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Orders.json");
+        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Orders.json?auth=$token");
     final response = await http.get(url);
 
     final List<OrderItem> loadedOrders = [];

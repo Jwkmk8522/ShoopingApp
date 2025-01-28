@@ -10,53 +10,59 @@ import '../Providers/product.dart';
 
 class Products with ChangeNotifier {
   List<Product> _item = [
-    Product(
-      id: 'm1',
-      title: "Clothes",
-      description: "This is very expensive and good clothes, smooth fabric.",
-      price: 675.5,
-      imageUrl:
-          "https://images.pexels.com/photos/934070/pexels-photo-934070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
-      isFavourite: false,
-    ),
-    Product(
-      id: 'm2',
-      title: "Shoes",
-      description: "Comfortable running shoes for sports.",
-      price: 120.0,
-      imageUrl:
-          "https://images.pexels.com/photos/19090/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      isFavourite: false,
-    ),
-    Product(
-      id: 'm3',
-      title: "Smartwatch",
-      description: "Track your activities and health.",
-      price: 199.99,
-      imageUrl:
-          "https://images.pexels.com/photos/1682821/pexels-photo-1682821.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
-      isFavourite: false,
-    ),
-    Product(
-      id: 'm4',
-      title: "Laptop",
-      description: "High-performance laptop for work and gaming.",
-      price: 999.99,
-      imageUrl:
-          "https://images.pexels.com/photos/18105/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      isFavourite: false,
-    ),
-    Product(
-      id: 'm5',
-      title: "Headphones",
-      description: "Noise-cancelling wireless headphones.",
-      price: 299.99,
-      imageUrl:
-          "https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      isFavourite: false,
-    ),
+    // Product(
+    //   id: 'm1',
+    //   title: "Clothes",
+    //   description: "This is very expensive and good clothes, smooth fabric.",
+    //   price: 675.5,
+    //   imageUrl:
+    //       "https://images.pexels.com/photos/934070/pexels-photo-934070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
+    //   isFavourite: false,
+    // ),
+    // Product(
+    //   id: 'm2',
+    //   title: "Shoes",
+    //   description: "Comfortable running shoes for sports.",
+    //   price: 120.0,
+    //   imageUrl:
+    //       "https://images.pexels.com/photos/19090/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
+    //   isFavourite: false,
+    // ),
+    // Product(
+    //   id: 'm3',
+    //   title: "Smartwatch",
+    //   description: "Track your activities and health.",
+    //   price: 199.99,
+    //   imageUrl:
+    //       "https://images.pexels.com/photos/1682821/pexels-photo-1682821.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
+    //   isFavourite: false,
+    // ),
+    // Product(
+    //   id: 'm4',
+    //   title: "Laptop",
+    //   description: "High-performance laptop for work and gaming.",
+    //   price: 999.99,
+    //   imageUrl:
+    //       "https://images.pexels.com/photos/18105/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
+    //   isFavourite: false,
+    // ),
+    // Product(
+    //   id: 'm5',
+    //   title: "Headphones",
+    //   description: "Noise-cancelling wireless headphones.",
+    //   price: 299.99,
+    //   imageUrl:
+    //       "https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1.png",
+    //   isFavourite: false,
+    // ),
   ];
 
+  String? authToken;
+
+  Products(
+    this.authToken,
+    this._item,
+  );
   List<Product> get item {
     // if (_showFavouritesOnly) {
     //   return _item.where((prodItem) {
@@ -91,7 +97,7 @@ class Products with ChangeNotifier {
 
   Future<void> getAndSetProduct() async {
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json");
+        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json?auth=$authToken");
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body);
@@ -135,7 +141,7 @@ class Products with ChangeNotifier {
     Product products,
   ) async {
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json");
+        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json?auth=$authToken");
 
     try {
       final response = await http.post(
@@ -173,7 +179,7 @@ class Products with ChangeNotifier {
     try {
       if (prodIndex >= 0) {
         final url = Uri.parse(
-            "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json");
+            "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken");
 
         http.patch(url,
             body: json.encode({
@@ -196,7 +202,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json");
+        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken");
     final removedProductIndex = _item.indexWhere((prod) => prod.id == id);
     Product? removedProduct = _item[removedProductIndex];
 //optimistic updating
@@ -205,7 +211,7 @@ class Products with ChangeNotifier {
 
     final response = await http.delete(url);
 
-    // print(response.statusCode);
+    print(json.decode(response.body));
 
     if (response.statusCode >= 400) {
       _item.insert(removedProductIndex, removedProduct);
