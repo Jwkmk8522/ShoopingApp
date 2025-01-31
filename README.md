@@ -1,16 +1,5 @@
 # shooping_app
 
-A new Flutter project.
+A complete Appplication with Provider stetemanagement and firebase real time database backend.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Ecommerce App In flutter](https://github.com/user-attachments/assets/f7c46575-72ba-4128-a50c-9857391c0e88)
