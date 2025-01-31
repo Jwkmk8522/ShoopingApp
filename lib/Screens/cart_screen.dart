@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooping_app/Models/http_exceptions.dart';
+import 'package:shooping_app/Utilities/error_dialog.dart';
 
 import '../Providers/cart.dart' show Cart;
 import '../Providers/orders.dart';
@@ -101,12 +103,21 @@ class _OrderNowButtonState extends State<OrderNowButton> {
               setState(() {
                 _isLoading = true;
               });
-              await Provider.of<Orders>(context, listen: false).addOrder(
-                  widget.cart.items.values.toList(), widget.cart.totalAmount);
-              setState(() {
-                _isLoading = false;
-              });
-              widget.cart.clear();
+              try {
+                await Provider.of<Orders>(context, listen: false).addOrder(
+                    widget.cart.items.values.toList(), widget.cart.totalAmount);
+                widget.cart.clear();
+              } on NoInternetExceptions catch (error) {
+                showErrorDialog(context, error.message);
+              } on OnUnknownExceptions catch (error) {
+                showErrorDialog(context, error.message);
+              } catch (error) {
+                showErrorDialog(context, "something went wrong");
+              } finally {
+                setState(() {
+                  _isLoading = false;
+                });
+              }
             },
       child: _isLoading
           ? const CircularProgressIndicator()

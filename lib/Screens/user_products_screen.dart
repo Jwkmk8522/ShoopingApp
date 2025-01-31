@@ -12,9 +12,10 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = '/UserProductsScreen';
   const UserProductsScreen({super.key});
 
-  Future<void> onRefreshh(BuildContext context) async {
+  Future<void> _onRefreshh(BuildContext context) async {
     try {
-      await Provider.of<Products>(context, listen: false).getAndSetProduct();
+      await Provider.of<Products>(context, listen: false)
+          .getAndSetProduct(true);
     } on NoProductsExceptions catch (error) {
       showErrorDialog(context, error.message);
     } on HttpExceptions catch (error) {
@@ -30,9 +31,10 @@ class UserProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('rebuilding..............');
     // In this we dont write listen false because when we delete Product
     // we again listen or rebuild the widget
-    final productData = Provider.of<Products>(context);
+    // final productData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -46,23 +48,31 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => onRefreshh(context),
-        child: ListView.builder(
-          itemCount: productData.item.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                UserProductItem(
-                  id: productData.item[index].id,
-                  imageUrl: productData.item[index].imageUrl,
-                  titlee: productData.item[index].title,
-                ),
-                const Divider()
-              ],
-            );
-          },
-        ),
+      body: FutureBuilder(
+        future: _onRefreshh(context),
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(child: CircularProgressIndicator())
+                : RefreshIndicator(
+                    onRefresh: () => _onRefreshh(context),
+                    child: Consumer<Products>(
+                      builder: (context, productData, _) => ListView.builder(
+                        itemCount: productData.item.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              UserProductItem(
+                                id: productData.item[index].id,
+                                imageUrl: productData.item[index].imageUrl,
+                                titlee: productData.item[index].title,
+                              ),
+                              const Divider()
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
       ),
     );
   }

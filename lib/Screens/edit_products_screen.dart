@@ -94,6 +94,7 @@ class _EditProductsState extends State<EditProductsScreen> {
 
         customSnackBar("Succesfully Update Product");
       }
+      Navigator.of(context).pop();
     } on NoInternetExceptions catch (error) {
       showErrorDialog(context, error.message);
     } on OnUnknownExceptions catch (error) {
@@ -104,7 +105,6 @@ class _EditProductsState extends State<EditProductsScreen> {
       setState(() {
         _isLoading = false;
       });
-      Navigator.of(context).pop();
     }
   }
 

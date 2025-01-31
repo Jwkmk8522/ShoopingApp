@@ -44,8 +44,10 @@ class UserProductItem extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   try {
-                    final shouldDelete = await showdeletedialog(context,
-                        "Are you sure you want to Delete this Product?");
+                    final shouldDelete = await showdeletedialog(
+                        context,
+                        "Are you sure you want to Delete this Product?",
+                        "Delete");
                     if (shouldDelete) {
                       await Provider.of<Products>(context, listen: false)
                           .deleteProduct(id);

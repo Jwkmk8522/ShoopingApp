@@ -31,9 +31,6 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         _isLoading = true;
       });
       await Provider.of<Products>(context, listen: false).getAndSetProduct();
-      setState(() {
-        _isLoading = false;
-      });
     } on NoProductsExceptions catch (error) {
       showErrorDialog(context, error.message);
     } on HttpExceptions catch (error) {
@@ -44,6 +41,10 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       showErrorDialog(context, error.message);
     } catch (error) {
       showErrorDialog(context, "something went wrong");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

@@ -41,7 +41,9 @@ class CartItem extends StatelessWidget {
       direction: DismissDirection.endToStart,
       confirmDismiss: (direction) {
         return showdeletedialog(
-            context, "Are you sure you want to Delete this Product From Cart?");
+            context,
+            "Are you sure you want to Delete this Product From Cart?",
+            "Delete");
       },
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItem(productId);

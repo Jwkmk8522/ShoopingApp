@@ -18,18 +18,18 @@ class Product with ChangeNotifier {
     this.isFavourite = false,
   });
 
-  Future<void> toogleFavouriteStatus(String? token) async {
+  Future<void> toogleFavouriteStatus(String? token, String? userId) async {
     final olddStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json?auth=$token");
+        "https://shoopingapp-12774-default-rtdb.firebaseio.com/UserFavourite/$userId/$id.json?auth=$token");
 
     try {
-      final response = await http.patch(url,
-          body: json.encode({
-            "isFavourite": isFavourite,
-          }));
+      final response = await http.put(url,
+          body: json.encode(
+            isFavourite,
+          ));
       if (response.statusCode >= 400) {
         isFavourite = olddStatus;
         notifyListeners();

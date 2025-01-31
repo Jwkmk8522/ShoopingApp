@@ -32,7 +32,7 @@ class ProductItem extends StatelessWidget {
                 color: Theme.of(context).colorScheme.error,
               ),
               onPressed: () {
-                product.toogleFavouriteStatus(authData.token);
+                product.toogleFavouriteStatus(authData.token, authData.userId);
               },
             ),
           ),

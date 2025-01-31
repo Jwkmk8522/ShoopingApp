@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shooping_app/Providers/auth.dart';
 import 'package:shooping_app/Screens/auth_screen.dart';
 import 'package:shooping_app/Screens/product_overview_screen.dart';
+import 'package:shooping_app/Screens/splash_screen.dart';
 
 import '../firebase_options.dart';
 import '../Screens/edit_products_screen.dart';
@@ -48,10 +49,11 @@ class MyApp extends StatelessWidget {
             },
           ),
           ChangeNotifierProxyProvider<Auth, Products>(
-            create: (context) => Products(null, []),
+            create: (context) => Products(null, [], null),
             update: (context, auth, previousProducts) => Products(
               auth.token,
               previousProducts == null ? [] : previousProducts.item,
+              auth.userId,
             ),
           ),
           ChangeNotifierProvider(
@@ -60,9 +62,11 @@ class MyApp extends StatelessWidget {
             },
           ),
           ChangeNotifierProxyProvider<Auth, Orders>(
-            create: (context) => Orders(null, []),
+            create: (context) => Orders(null, [], null),
             update: (context, auth, previousOrders) => Orders(
-                auth.token, previousOrders == null ? [] : previousOrders.items),
+                auth.token,
+                previousOrders == null ? [] : previousOrders.items,
+                auth.userId),
           ),
         ],
         child: Consumer<Auth>(builder: (context, authData, _) {
@@ -72,7 +76,15 @@ class MyApp extends StatelessWidget {
             darkTheme: customDarkTheme,
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            home: authData.isAuth ? ProductOverviewScreen() : AuthScreen(),
+            home: authData.isAuth
+                ? const ProductOverviewScreen()
+                : FutureBuilder(
+                    future: authData.tryAutoLogin(),
+                    builder: (context, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen()),
             routes: {
               ProductDetailScreen.routeName: (context) =>
                   const ProductDetailScreen(),

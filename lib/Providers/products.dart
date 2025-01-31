@@ -58,11 +58,9 @@ class Products with ChangeNotifier {
   ];
 
   String? authToken;
+  String? userId;
 
-  Products(
-    this.authToken,
-    this._item,
-  );
+  Products(this.authToken, this._item, this.userId);
   List<Product> get item {
     // if (_showFavouritesOnly) {
     //   return _item.where((prodItem) {
@@ -95,9 +93,14 @@ class Products with ChangeNotifier {
     });
   }
 
-  Future<void> getAndSetProduct() async {
+  Future<void> getAndSetProduct([bool filterByUser = false]) async {
+    // var url = Uri.parse(
+    //     'https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json?auth=$authToken$orderBy="createrId"$equalTo="$userId"');
+    String filterString =
+        filterByUser ? 'orderBy=%22createrId%22&equalTo=%22$userId%22' : '';
     var url = Uri.parse(
-        "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json?auth=$authToken");
+        'https://shoopingapp-12774-default-rtdb.firebaseio.com/Products.json?auth=$authToken&$filterString');
+
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body);
@@ -111,16 +114,24 @@ class Products with ChangeNotifier {
           throw NoProductsExceptions(
               message: "No products found in the database");
         }
+        var url = Uri.parse(
+            "https://shoopingapp-12774-default-rtdb.firebaseio.com/UserFavourite/$userId.json/?auth=$authToken");
+        final favouriteResponse = await http.get(url);
+        final extractedFavourite = json.decode(favouriteResponse.body);
+        // print(response.body);
+        // print(favouriteResponse.body);
+
         (extractedData as Map<String, dynamic>).forEach(
           (prodId, prodData) {
             loadedProducts.add(Product(
-              id: prodId,
-              title: prodData['Title'],
-              description: prodData['description'],
-              price: prodData['price'],
-              imageUrl: prodData['imageurl'],
-              isFavourite: prodData['isFavourite'],
-            ));
+                id: prodId,
+                title: prodData['Title'],
+                description: prodData['description'],
+                price: prodData['price'],
+                imageUrl: prodData['imageurl'],
+                isFavourite: extractedFavourite == null
+                    ? false
+                    : extractedFavourite[prodId] ?? false));
           },
         );
         _item = loadedProducts;
@@ -151,7 +162,7 @@ class Products with ChangeNotifier {
           'description': products.description,
           'price': products.price,
           'imageurl': products.imageUrl,
-          'isFavourite': products.isFavourite,
+          'createrId': userId,
         }),
       );
 
@@ -166,12 +177,12 @@ class Products with ChangeNotifier {
       _item.add(newProduct);
 
       // _item.insert(0, products); To add the product at the first, meaning the new product at the top
-      notifyListeners();
     } on SocketException {
-      NoInternetExceptions(message: "No Inrenet");
+      throw NoInternetExceptions(message: "No Inrenet");
     } catch (error) {
       throw OnUnknownExceptions(message: "An UnExpectedError Occured");
     }
+    notifyListeners();
   }
 
   Future<void> updateProduct(String id, Product newProduct) async {
@@ -181,7 +192,7 @@ class Products with ChangeNotifier {
         final url = Uri.parse(
             "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken");
 
-        http.patch(url,
+        await http.patch(url,
             body: json.encode({
               'Title': newProduct.title,
               'description': newProduct.description,
@@ -194,30 +205,42 @@ class Products with ChangeNotifier {
         log("----------------------------");
       }
     } on SocketException {
-      NoInternetExceptions(message: "No Inrenet");
+      throw NoInternetExceptions(message: "No Inrenet");
     } catch (error) {
       throw OnUnknownExceptions(message: "An UnExpectedError Occured");
     }
   }
 
   Future<void> deleteProduct(String id) async {
-    var url = Uri.parse(
+    final url = Uri.parse(
         "https://shoopingapp-12774-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken");
+
     final removedProductIndex = _item.indexWhere((prod) => prod.id == id);
-    Product? removedProduct = _item[removedProductIndex];
-//optimistic updating
+    if (removedProductIndex < 0) return;
+
+    Product removedProduct = _item[removedProductIndex];
+
     _item.removeAt(removedProductIndex);
-    notifyListeners();
+    notifyListeners(); // ✅ Optimistic update (remove item before confirming success)
 
-    final response = await http.delete(url);
+    try {
+      final response = await http.delete(url);
 
-    print(json.decode(response.body));
-
-    if (response.statusCode >= 400) {
-      _item.insert(removedProductIndex, removedProduct);
+      if (response.statusCode >= 400) {
+        throw HttpExceptions(message: "Failed to delete product from server.");
+      }
+    } on SocketException {
+      // ✅ Handle no internet connection
+      _item.insert(
+          removedProductIndex, removedProduct); // Restore product in UI
       notifyListeners();
-      throw HttpExceptions(message: "There is error in response");
+      throw HttpExceptions(
+          message: "No Internet Connection. Product not deleted.");
+    } catch (error) {
+      _item.insert(
+          removedProductIndex, removedProduct); // Restore product in UI
+      notifyListeners();
+      throw HttpExceptions(message: "Something went wrong.");
     }
-    removedProduct = null;
   }
 }

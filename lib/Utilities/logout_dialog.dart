@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './generic_dialog.dart';
 
-Future<bool> showdeletedialog(
+Future<bool> showLogOutDialog(
   BuildContext context,
   String title,
   String textt,
@@ -19,8 +19,8 @@ Future<bool> showdeletedialog(
       ),
     ),
     optionsBuilder: () => {
-      'Cancel': false,
-      'Delete': true,
+      'No': false,
+      'Yes': true,
     },
   ).then(
     (value) => value ?? false,

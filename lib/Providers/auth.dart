@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shooping_app/Models/http_exceptions.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expireyDate;
-  // String? _userId;
+  String? _userId;
 
   bool get isAuth {
     return token != null;
+  }
+
+  String? get userId {
+    return _userId;
   }
 
   String? get token {
@@ -38,7 +43,7 @@ class Auth with ChangeNotifier {
         throw HttpExceptions(message: responseData['error']['message']);
       }
       _token = responseData['idToken'];
-      // _userId = responseData['localId'];
+      _userId = responseData['localId'];
       _expireyDate = DateTime.now().add(
         Duration(
           seconds: int.parse(
@@ -47,6 +52,14 @@ class Auth with ChangeNotifier {
         ),
       );
       notifyListeners();
+      // Save to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        'token': _token,
+        'userId': _userId,
+        'expiryDate': _expireyDate!.toIso8601String(),
+      });
+      prefs.setString('userData', userData);
     } catch (error) {
       rethrow;
     }
@@ -58,5 +71,35 @@ class Auth with ChangeNotifier {
 
   Future<void> loginUser(String? email, String? password) async {
     return _authenticate(email!, password!, 'signInWithPassword');
+  }
+
+  void logOutUser() async {
+    _token = null;
+    _expireyDate = null;
+    _userId = null;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
+
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+
+    final extractedUserData =
+        json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
+    final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+
+    if (expiryDate.isBefore(DateTime.now())) {
+      return false;
+    }
+
+    _token = extractedUserData['token'];
+    _userId = extractedUserData['userId'];
+    _expireyDate = expiryDate;
+    notifyListeners();
+    return true;
   }
 }

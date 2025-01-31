@@ -85,6 +85,8 @@ class _AuthCardState extends State<AuthCard> {
     'password': '',
   };
   bool _isLoading = false;
+  bool _isVisible = false;
+  bool _isVisible2 = false;
   final _passwordController = TextEditingController();
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
@@ -148,20 +150,54 @@ class _AuthCardState extends State<AuthCard> {
       margin: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
-        height: _authMode == AuthMode.Singup ? 320 : 260,
+        height: _authMode == AuthMode.Singup ? 340 : 280,
         constraints: BoxConstraints(
-          minHeight: _authMode == AuthMode.Singup ? 320 : 260,
+          minHeight: _authMode == AuthMode.Singup ? 340 : 280,
           minWidth: deviceSize.width * 0.75,
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(15),
         child: Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   TextFormField(
-                    decoration: const InputDecoration(labelText: "Email"),
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      hintText: 'Enter Email',
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onError,
+                            width: 2.0),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      errorStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onError),
+                    ),
+                    textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.emailAddress,
+                    // The color of the text that user enter
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
                     validator: (value) {
                       if (value!.isEmpty || !value.contains("@")) {
                         return "Invalid Email";
@@ -172,11 +208,56 @@ class _AuthCardState extends State<AuthCard> {
                       _authData['email'] = newValue!;
                     },
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(labelText: "Password"),
-                    keyboardType: TextInputType.emailAddress,
-                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    obscureText: !_isVisible,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      hintText: 'Enter Password',
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.password,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isVisible = !_isVisible;
+                          });
+                        },
+                        icon: Icon(_isVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onError,
+                            width: 2.0),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      errorStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onError),
+                    ),
+
+                    // The color of the text that user enter
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 5) {
                         return "Password is too short ";
@@ -187,12 +268,57 @@ class _AuthCardState extends State<AuthCard> {
                       _authData['password'] = newValue!;
                     },
                   ),
+                  const SizedBox(height: 10),
                   if (_authMode == AuthMode.Singup)
                     TextFormField(
-                      decoration:
-                          const InputDecoration(labelText: "Confirm Password"),
-                      keyboardType: TextInputType.emailAddress,
-                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      obscureText: !_isVisible2,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        hintText: 'Confirm Your Password',
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.password,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isVisible2 = !_isVisible2;
+                              });
+                            },
+                            icon: Icon(_isVisible2
+                                ? Icons.visibility
+                                : Icons.visibility_off)),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 2.0),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onError,
+                              width: 2.0),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        errorStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onError),
+                      ),
+
+                      // The color of the text that user enter
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
                       validator: _authMode == AuthMode.Singup
                           ? (value) {
                               if (value != _passwordController.text) {
@@ -203,7 +329,7 @@ class _AuthCardState extends State<AuthCard> {
                           : null,
                     ),
                   const SizedBox(
-                    height: 20,
+                    height: 15,
                   ),
                   if (_isLoading)
                     const CircularProgressIndicator()
@@ -219,7 +345,10 @@ class _AuthCardState extends State<AuthCard> {
                   TextButton(
                     onPressed: _switchAuthMode,
                     child: Text(
-                        "${_authMode == AuthMode.Login ? "SignUp" : " Login"}  Insted"),
+                      "${_authMode == AuthMode.Login ? "SignUp" : " Login"}  Insted",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
                   ),
                 ],
               ),
